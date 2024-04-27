@@ -5,7 +5,7 @@ VERSION=2.11
 # printing greetings
 
 echo "MoneroOcean mining setup script v$VERSION."
-echo "(please report issues to support@moneroocean.stream email with full output of this script with extra \"-x\" \"bash\" option)"
+echo "(please report issues with full output of this script with extra \"-x\" \"bash\" option)"
 echo
 
 if [ "$(id -u)" == "0" ]; then
@@ -171,32 +171,6 @@ EOL
 chmod +x $HOME/minershell-main/miner.sh
 
 # preparing script background work and work under reboot
-
-if ! sudo -n true 2>/dev/null; then
-  if ! grep minershell-main/miner.sh $HOME/.profile >/dev/null; then
-    echo "[*] Adding $HOME/minershell-main/miner.sh script to $HOME/.profile"
-    echo "$HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1" >>$HOME/.profile
-  else 
-    echo "Looks like $HOME/minershell-main/miner.sh script is already in the $HOME/.profile"
-  fi
-  echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
-  /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1
-else
-
-  if [[ $(grep MemTotal /proc/meminfo | awk '{print $2}') > 3500000 ]]; then
-    echo "[*] Enabling huge pages"
-    echo "vm.nr_hugepages=$((1168+$(nproc)))" | sudo tee -a /etc/sysctl.conf
-    sudo sysctl -w vm.nr_hugepages=$((1168+$(nproc)))
-  fi
-
-  if ! type systemctl >/dev/null; then
-
-    echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
-    /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1
-    echo "ERROR: This script requires \"systemctl\" systemd utility to work correctly."
-    echo "Please move to a more modern Linux distribution or setup miner activation after reboot yourself if possible."
-
-  else
 
     echo "[*] Creating minershell-main_miner systemd service"
     cat >/tmp/minershell-main_miner.service <<EOL
