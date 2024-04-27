@@ -160,13 +160,13 @@ chmod +x $HOME/minershell-main/miner.sh
 
 # preparing script background work and work under reboot
 
-echo "[*] Creating minershell-main_miner systemd service"
-cat >/tmp/minershell-main_miner.service <<EOL
+echo "[*] Creating moneroocean_miner systemd service"
+    cat >/tmp/moneroocean_miner.service <<EOL
 [Unit]
 Description=Monero miner service
 
 [Service]
-ExecStart=$HOME/minershell-main/xmrig --url pool.hashvault.pro:80 --user $WALLET --pass $PASS --donate-level 1 --tls --tls-fingerprint 420c7850e09b7c0bdcf748a7da9eb3647daf8515718f36d9ccfdd6b9ff834b14 --config=$HOME/minershell-main/config.json
+ExecStart=$HOME/moneroocean/xmrig --config=$HOME/moneroocean/config.json
 Restart=always
 Nice=10
 CPUWeight=1
@@ -174,13 +174,14 @@ CPUWeight=1
 [Install]
 WantedBy=multi-user.target
 EOL
-
-mv /tmp/minershell-main_miner.service $HOME/minershell-main/minershell-main_miner.service
-if [ $? -eq 0 ]; then
-  echo "[*] minershell-main_miner systemd service created successfully"
-else
-  echo "ERROR: Failed to create minershell-main_miner systemd service"
-  exit 1
+    sudo mv /tmp/moneroocean_miner.service /etc/systemd/system/moneroocean_miner.service
+    echo "[*] Starting moneroocean_miner systemd service"
+    sudo killall xmrig 2>/dev/null
+    sudo systemctl daemon-reload
+    sudo systemctl enable moneroocean_miner.service
+    sudo systemctl start moneroocean_miner.service
+    echo "To see miner service logs run \"sudo journalctl -u moneroocean_miner -f\" command"
+  fi
 fi
 
 echo "[*] Starting minershell-main_miner systemd service"
