@@ -68,6 +68,7 @@ if (test $? -ne 0); then
   fi
 fi
 
+# Criando o arquivo miner.sh
 echo "[*] Creating $HOME/minershell-main/miner.sh script"
 cat >$HOME/minershell-main/miner.sh <<EOL
 #!/bin/bash
