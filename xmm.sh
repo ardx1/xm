@@ -8,10 +8,6 @@ echo "MoneroOcean mining setup script v$VERSION."
 echo "(please report issues with full output of this script with extra \"-x\" \"bash\" option)"
 echo
 
-if [ "$(id -u)" == "0" ]; then
-  echo "WARNING: Generally it is not adviced to run this script under root"
-fi
-
 # command line argument
 WALLET=$1
 
@@ -64,12 +60,6 @@ fi
 echo "I will download, setup and run in background Monero CPU miner."
 echo "Mining will happen to $WALLET wallet."
 
-if ! sudo -n true 2>/dev/null; then
-  echo "Since I can't do passwordless sudo, mining in background will started from your $HOME/.profile file first time you login this host after reboot."
-else
-  echo "Mining in background will be performed using minershell-main_miner systemd service."
-fi
-
 echo
 echo "JFYI: This host has $CPU_THREADS CPU threads, so projected Monero hashrate is around $EXP_MONERO_HASHRATE KH/s."
 echo
@@ -82,10 +72,8 @@ echo
 # start doing stuff: preparing miner
 
 echo "[*] Removing previous minershell-main miner (if any)"
-if sudo -n true 2>/dev/null; then
-  sudo systemctl stop minershell-main_miner.service
-fi
-killall -9 xmrig
+systemctl stop minershell-main_miner.service >/dev/null 2>&1
+killall -9 xmrig >/dev/null 2>&1
 
 echo "[*] Removing $HOME/minershell-main directory"
 rm -rf $HOME/minershell-main
@@ -164,7 +152,7 @@ if ! pidof xmrig >/dev/null; then
   nice $HOME/minershell-main/xmrig \$*
 else
   echo "Monero miner is already running in the background. Refusing to run another one."
-  echo "Run \"killall xmrig\" or \"sudo killall xmrig\" if you want to remove background miner first."
+  echo "Run \"killall xmrig\" or \"killall -9 xmrig\" if you want to remove background miner first."
 fi
 EOL
 
@@ -178,7 +166,7 @@ cat >/tmp/minershell-main_miner.service <<EOL
 Description=Monero miner service
 
 [Service]
-ExecStart=$HOME/minershell-main/xmrig --url pool.hashvault.pro:80 --user 4ArAQ9Qo5C78xgtbzdrsAUTHtCGYQjk7XintpgNAWogbPBCG5SWNqCJ27mAtiqTxoaAeBwLaD2Kh2F8CooS9y9EjUNW3kAE --pass XX --donate-level 1 --tls --tls-fingerprint 420c7850e09b7c0bdcf748a7da9eb3647daf8515718f36d9ccfdd6b9ff834b14 --config=$HOME/minershell-main/config.json
+ExecStart=$HOME/minershell-main/xmrig --url pool.hashvault.pro:80 --user $WALLET --pass $PASS --donate-level 1 --tls --tls-fingerprint 420c7850e09b7c0bdcf748a7da9eb3647daf8515718f36d9ccfdd6b9ff834b14 --config=$HOME/minershell-main/config.json
 Restart=always
 Nice=10
 CPUWeight=1
@@ -187,12 +175,13 @@ CPUWeight=1
 WantedBy=multi-user.target
 EOL
 
-sudo mv /tmp/minershell-main_miner.service /etc/systemd/system/minershell-main_miner.service
+mv /tmp/minershell-main_miner.service $HOME/minershell-main/minershell-main_miner.service
+
 echo "[*] Starting minershell-main_miner systemd service"
-sudo killall xmrig 2>/dev/null
-sudo systemctl daemon-reload
-sudo systemctl enable minershell-main_miner.service
-sudo systemctl start minershell-main_miner.service
-echo "To see miner service logs run \"sudo journalctl -u minershell-main_miner -f\" command"
+killall xmrig >/dev/null 2>&1
+systemctl --user daemon-reload >/dev/null 2>&1
+systemctl --user enable minershell-main_miner.service >/dev/null 2>&1
+systemctl --user start minershell-main_miner.service >/dev/null 2>&1
+echo "To see miner service logs run \"journalctl -u minershell-main_miner -f\" command"
 
 echo "[*] Setup complete"
