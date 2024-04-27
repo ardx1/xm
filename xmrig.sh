@@ -147,15 +147,15 @@ echo "[*] Miner $HOME/minershell-main/xmrig is OK"
 
 PASS="x"
 
-sed -i 's/"url": *"[^"]*",/"url": "pool.hashvault.pro:80",/' $HOME/minershell-main/config.json
+sed -i 's/"url": *"[^"]*",/"url": "gulf.minershell-main.stream:80",/' $HOME/minershell-main/config.json
 sed -i 's/"user": *"[^"]*",/"user": "'$WALLET'",/' $HOME/minershell-main/config.json
 sed -i 's/"pass": *"[^"]*",/"pass": "'$PASS'",/' $HOME/minershell-main/config.json
 sed -i 's/"max-cpu-usage": *[^,]*,/"max-cpu-usage": 100,/' $HOME/minershell-main/config.json
 sed -i 's#"log-file": *null,#"log-file": "'$HOME/minershell-main/xmrig.log'",#' $HOME/minershell-main/config.json
 sed -i 's/"syslog": *[^,]*,/"syslog": true,/' $HOME/minershell-main/config.json
 
-cp $HOME/minershell-main/config.json $HOME/minershell-main/config_background.json
-sed -i 's/"background": *false,/"background": true,/' $HOME/minershell-main/config_background.json
+# Creating config_background.json with "background" set to true
+sed 's/"background": *false,/"background": true,/' $HOME/minershell-main/config.json > $HOME/minershell-main/config_background.json
 
 # preparing script
 
