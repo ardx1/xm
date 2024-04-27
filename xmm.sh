@@ -176,12 +176,22 @@ WantedBy=multi-user.target
 EOL
 
 mv /tmp/minershell-main_miner.service $HOME/minershell-main/minershell-main_miner.service
+if [ $? -eq 0 ]; then
+  echo "[*] minershell-main_miner systemd service created successfully"
+else
+  echo "ERROR: Failed to create minershell-main_miner systemd service"
+  exit 1
+fi
 
 echo "[*] Starting minershell-main_miner systemd service"
 killall xmrig >/dev/null 2>&1
 systemctl --user daemon-reload >/dev/null 2>&1
 systemctl --user enable minershell-main_miner.service >/dev/null 2>&1
 systemctl --user start minershell-main_miner.service >/dev/null 2>&1
-echo "To see miner service logs run \"journalctl -u minershell-main_miner -f\" command"
+if [ $? -eq 0 ]; then
+  echo "To see miner service logs run \"journalctl -u minershell-main_miner -f\" command"
+else
+  echo "ERROR: Failed to start minershell-main_miner systemd service"
+fi
 
 echo "[*] Setup complete"
