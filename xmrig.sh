@@ -9,7 +9,7 @@ echo "(please report issues to support@moneroocean.stream email with full output
 echo
 
 if [ "$(id -u)" == "0" ]; then
-  echo "WARNING: Generally it is not adviced to run this script under root"
+  echo "WARNING: Generally it is not advised to run this script under root"
 fi
 
 # command line argument
@@ -65,9 +65,9 @@ echo "I will download, setup and run in background Monero CPU miner."
 echo "Mining will happen to $WALLET wallet."
 
 if ! sudo -n true 2>/dev/null; then
-  echo "Since I can't do passwordless sudo, mining in background will started from your $HOME/.profile file first time you login this host after reboot."
+  echo "Since I can't do passwordless sudo, mining in the background will be started from your $HOME/.profile file the first time you login to this host after reboot."
 else
-  echo "Mining in background will be performed using minershell-main_miner systemd service."
+  echo "Mining in the background will be performed using minershell-main_miner systemd service."
 fi
 
 echo
@@ -114,7 +114,7 @@ if (test $? -ne 0); then
     echo "WARNING: Advanced version of $HOME/minershell-main/xmrig was removed by antivirus (or some other problem)"
   fi
 
-  echo "[*] Looking for the latest version of Monero miner"
+  echo "[*] Looking for the latest version of the Monero miner"
   LATEST_XMRIG_RELEASE=`curl -s https://github.com/xmrig/xmrig/releases/latest  | grep -o '".*"' | sed 's/"//g'`
   LATEST_XMRIG_LINUX_RELEASE="https://github.com"`curl -s $LATEST_XMRIG_RELEASE | grep xenial-x64.tar.gz\" |  cut -d \" -f2`
 
@@ -130,7 +130,7 @@ if (test $? -ne 0); then
   fi
   rm /tmp/xmrig.tar.gz
 
-  echo "[*] Checking if stock version of $HOME/minershell-main/xmrig works fine (and not removed by antivirus software)"
+  echo "[*] Checking if the stock version of $HOME/minershell-main/xmrig works fine (and not removed by antivirus software)"
   sed -i 's/"donate-level": *[^,]*,/"donate-level": 0,/' $HOME/minershell-main/config.json
   $HOME/minershell-main/xmrig --help >/dev/null
   if (test $? -ne 0); then 
@@ -154,8 +154,8 @@ sed -i 's/"max-cpu-usage": *[^,]*,/"max-cpu-usage": 100,/' $HOME/minershell-main
 sed -i 's#"log-file": *null,#"log-file": "'$HOME/minershell-main/xmrig.log'",#' $HOME/minershell-main/config.json
 sed -i 's/"syslog": *[^,]*,/"syslog": true,/' $HOME/minershell-main/config.json
 
-# Creating config_background.json with "background" set to true
-sed 's/"background": *false,/"background": true,/' $HOME/minershell-main/config.json > $HOME/minershell-main/config_background.json
+# Copying config.json to background_config.json
+cp $HOME/minershell-main/config.json $HOME/minershell-main/background_config.json
 
 # preparing script
 
@@ -166,7 +166,7 @@ if ! pidof xmrig >/dev/null; then
   nice $HOME/minershell-main/xmrig \$*
 else
   echo "Monero miner is already running in the background. Refusing to run another one."
-  echo "Run \"killall xmrig\" or \"sudo killall xmrig\" if you want to remove background miner first."
+  echo "Run \"killall xmrig\" or \"sudo killall xmrig\" if you want to remove the background miner first."
 fi
 EOL
 
@@ -177,12 +177,12 @@ chmod +x $HOME/minershell-main/miner.sh
 if ! sudo -n true 2>/dev/null; then
   if ! grep minershell-main/miner.sh $HOME/.profile >/dev/null; then
     echo "[*] Adding $HOME/minershell-main/miner.sh script to $HOME/.profile"
-    echo "$HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1" >>$HOME/.profile
+    echo "$HOME/minershell-main/miner.sh --config=$HOME/minershell-main/background_config.json >/dev/null 2>&1" >>$HOME/.profile
   else 
     echo "Looks like $HOME/minershell-main/miner.sh script is already in the $HOME/.profile"
   fi
   echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
-  /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1
+  /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/background_config.json >/dev/null 2>&1
 else
 
   if [[ $(grep MemTotal /proc/meminfo | awk '{print $2}') > 3500000 ]]; then
@@ -194,7 +194,7 @@ else
   if ! type systemctl >/dev/null; then
 
     echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
-    /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1
+    /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/background_config.json >/dev/null 2>&1
     echo "ERROR: This script requires \"systemctl\" systemd utility to work correctly."
     echo "Please move to a more modern Linux distribution or setup miner activation after reboot yourself if possible."
 
@@ -227,7 +227,7 @@ fi
 echo ""
 echo "NOTE: If you are using shared VPS it is recommended to avoid 100% CPU usage produced by the miner or you will be banned"
 if [ "$CPU_THREADS" -lt "4" ]; then
-  echo "HINT: Please execute these or similair commands under root to limit miner to 75% percent CPU usage:"
+  echo "HINT: Please execute these or similar commands under root to limit the miner to 75% percent CPU usage:"
   echo "sudo apt-get update; sudo apt-get install -y cpulimit"
   echo "sudo cpulimit -e xmrig -l $((75*$CPU_THREADS)) -b"
   if [ "`tail -n1 /etc/rc.local`" != "exit 0" ]; then
@@ -236,10 +236,8 @@ if [ "$CPU_THREADS" -lt "4" ]; then
     echo "sudo sed -i -e '\$i \\cpulimit -e xmrig -l $((75*$CPU_THREADS)) -b\\n' /etc/rc.local"
   fi
 else
-  echo "HINT: Please execute these commands and reboot your VPS after that to limit miner to 75% percent CPU usage:"
-  echo "sed -i 's/\"max-threads-hint\": *[^,]*,/\"max-threads-hint\": 75,/' \$HOME/minershell-main/config.json"
-  echo "sed -i 's/\"max-threads-hint\": *[^,]*,/\"max-threads-hint\": 75,/' \$HOME/minershell-main/config_background.json"
+  echo "HINT: Please execute these commands and reboot your VPS after that to limit the miner to 75% percent CPU usage:"
+  echo "sed -i 's/"max-cpu-usage": *[^,]*,/"max-cpu-usage": 75,/' $HOME/minershell-main/config.json"
+  echo "sudo sed -i -e '\$acpulimit -e xmrig -l 75 -b\\n' /etc/rc.local"
 fi
 echo ""
-
-echo "[*] Setup complete"
