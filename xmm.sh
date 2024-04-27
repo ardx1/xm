@@ -231,7 +231,6 @@ if [ "$CPU_THREADS" -lt "4" ]; then
   echo "sudo apt-get update; sudo apt-get install -y cpulimit"
   echo "sudo cpulimit -e xmrig -l $((75*$CPU_THREADS)) -b"
   if [ "`tail -n1 /etc/rc.local`" != "exit 0" ]; then
-  else
  
   fi
 else
