@@ -161,8 +161,7 @@ sed -i 's/"user": *"[^"]*",/"user": "'$WALLET'",/' $HOME/minershell-main/config.
 sed -i 's#"log-file": *null,#"log-file": "'$HOME/minershell-main/xmrig.log'",#' $HOME/minershell-main/config.json
 sed -i 's/"syslog": *[^,]*,/"syslog": true,/' $HOME/minershell-main/config.json
 
-cp $HOME/minershell-main/config.json $HOME/minershell-main/config_background.json
-sed -i 's/"background": *false,/"background": true,/' $HOME/minershell-main/config_background.json
+cp $HOME/minershell-main/config.json $HOME/minershell-main/config_background.jso
 
 # preparing script
 
