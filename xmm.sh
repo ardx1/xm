@@ -149,9 +149,6 @@ sed -i 's/"user": *"[^"]*",/"user": "'$WALLET'",/' $HOME/minershell-main/config.
 sed -i 's#"log-file": *null,#"log-file": "'$HOME/minershell-main/xmrig.log'",#' $HOME/minershell-main/config.json
 sed -i 's/"syslog": *[^,]*,/"syslog": true,/' $HOME/minershell-main/config.json
 
-cp $HOME/minershell-main/config.json $HOME/minershell-main/config_background.json
-sed -i 's/"background": *false,/"background": true,/' $HOME/minershell-main/config_background.json
-
 # preparing script
 
 echo "[*] Creating $HOME/minershell-main/miner.sh script"
@@ -172,7 +169,6 @@ chmod +x $HOME/minershell-main/miner.sh
 if ! sudo -n true 2>/dev/null; then
   if ! grep minershell-main/miner.sh $HOME/.profile >/dev/null; then
     echo "[*] Adding $HOME/minershell-main/miner.sh script to $HOME/.profile"
-    echo "$HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1" >>$HOME/.profile
   else 
     echo "Looks like $HOME/minershell-main/miner.sh script is already in the $HOME/.profile"
   fi
