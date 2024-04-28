@@ -238,5 +238,3 @@ fi
 echo ""
 
 echo "[*] Setup complete"
-
-
