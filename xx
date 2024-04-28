@@ -141,7 +141,6 @@ if (test $? -ne 0); then
     fi
     exit 1
   fi
-fi
 
 echo "[*] Miner $HOME/minershell-main/xmrig is OK"
 
