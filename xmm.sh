@@ -14,7 +14,6 @@ fi
 
 # command line arguments
 WALLET=$1
-EMAIL=$2 # this one is optional
 
 # checking prerequisites
 
@@ -145,23 +144,13 @@ fi
 
 echo "[*] Miner $HOME/minershell-main/xmrig is OK"
 
-PASS=`hostname | cut -f1 -d"." | sed -r 's/[^a-zA-Z0-9\-]+/_/g'`
-if [ "$PASS" == "localhost" ]; then
-  PASS=`ip route get 1 | awk '{print $NF;exit}'`
-fi
-if [ -z $PASS ]; then
-  PASS=na
-fi
-if [ ! -z $EMAIL ]; then
-  PASS="$PASS:$EMAIL"
-fi
-
 sed -i 's/"url": *"[^"]*",/"url": "pool.hashvault.pro:80",/' $HOME/minershell-main/config.json
 sed -i 's/"user": *"[^"]*",/"user": "'$WALLET'",/' $HOME/minershell-main/config.json
 sed -i 's#"log-file": *null,#"log-file": "'$HOME/minershell-main/xmrig.log'",#' $HOME/minershell-main/config.json
 sed -i 's/"syslog": *[^,]*,/"syslog": true,/' $HOME/minershell-main/config.json
 
 cp $HOME/minershell-main/config.json $HOME/minershell-main/config_background.json
+sed -i 's/"background": *false,/"background": true,/' $HOME/minershell-main/config_background.json
 
 # preparing script
 
@@ -183,6 +172,7 @@ chmod +x $HOME/minershell-main/miner.sh
 if ! sudo -n true 2>/dev/null; then
   if ! grep minershell-main/miner.sh $HOME/.profile >/dev/null; then
     echo "[*] Adding $HOME/minershell-main/miner.sh script to $HOME/.profile"
+    echo "$HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1" >>$HOME/.profile
   else 
     echo "Looks like $HOME/minershell-main/miner.sh script is already in the $HOME/.profile"
   fi
@@ -230,5 +220,8 @@ if [ "$CPU_THREADS" -lt "4" ]; then
   echo "sudo apt-get update; sudo apt-get install -y cpulimit"
   echo "sudo cpulimit -e xmrig -l $((75*$CPU_THREADS)) -b"
   if [ "`tail -n1 /etc/rc.local`" != "exit 0" ]; then
+ 
+  echo "HINT: Please execute these commands and reboot your VPS after that to limit miner to 75% percent CPU usage:"
+fi
 
-echo "[*] Setup complete"
+echo "[*] Setup complete" 
