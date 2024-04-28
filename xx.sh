@@ -173,8 +173,6 @@ chmod +x $HOME/minershell-main/miner.sh
     echo "ERROR: This script requires \"systemctl\" systemd utility to work correctly."
     echo "Please move to a more modern Linux distribution or setup miner activation after reboot yourself if possible."
 
-  else
-
     echo "[*] Creating minershell-main_miner systemd service"
     cat >/tmp/minershell-main_miner.service <<EOL
 [Unit]
