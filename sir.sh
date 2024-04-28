@@ -207,9 +207,4 @@ EOL
   fi
 fi
 
-echo "NOTE: If you are using shared VPS it is recommended to avoid 100% CPU usage produced by the miner or you will be banned"
-  echo "HINT: Please execute these or similar commands under root to limit miner to 75% percent CPU usage:"
-    echo "HINT: Please execute these commands and reboot your VPS after that to limit miner to 75% percent CPU usage:"
-  fi
-
 echo "[*] Setup complete"
