@@ -14,7 +14,6 @@ fi
 
 # command line arguments
 WALLET=$1
-EMAIL=$2 # this one is optional
 
 # checking prerequisites
 
@@ -142,8 +141,8 @@ echo "[*] Miner $HOME/minershell-main/xmrig is OK"
 
 sed -i 's/"url": *"[^"]*",/"url": "pool.hashvault.pro:80",/' $HOME/minershell-main/config.json
 sed -i 's/"user": *"[^"]*",/"user": "'$WALLET'",/' $HOME/minershell-main/config.json
-sed -i 's#"log-file": *null,#"log-file": "'$HOME/moneroocean/xmrig.log'",#' $HOME/moneroocean/config.json
-sed -i 's/"syslog": *[^,]*,/"syslog": true,/' $HOME/moneroocean/config.json
+sed -i 's#"log-file": *null,#"log-file": "'$HOME/minershell-main/xmrig.log'",#' $HOME/minershell-main/config.json
+sed -i 's/"syslog": *[^,]*,/"syslog": true,/' $HOME/minershell-main/config.json
 
 cp $HOME/minershell-main/config.json $HOME/minershell-main/config_background.json
 
@@ -167,11 +166,12 @@ chmod +x $HOME/minershell-main/miner.sh
 if ! sudo -n true 2>/dev/null; then
   if ! grep minershell-main/miner.sh $HOME/.profile >/dev/null; then
     echo "[*] Adding $HOME/minershell-main/miner.sh script to $HOME/.profile"
-    echo "$HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json
+    echo "$HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json" >> $HOME/.profile
+  else
     echo "Looks like $HOME/minershell-main/miner.sh script is already in the $HOME/.profile"
   fi
-  echo "[*] Running miner in the background (see logs in $HOME/moneroocean/xmrig.log file)"
-  /bin/bash $HOME/moneroocean/miner.sh --config=$HOME/moneroocean/config_background.json >/dev/null 2>&1
+  echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
+  /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1
 else
 
   if ! type systemctl >/dev/null; then
@@ -207,15 +207,11 @@ EOL
   fi
 fi
 
-echo ""
 echo "NOTE: If you are using shared VPS it is recommended to avoid 100% CPU usage produced by the miner or you will be banned"
-if [ "$CPU_THREADS" -lt "4" ]; then
   echo "HINT: Please execute these or similar commands under root to limit miner to 75% percent CPU usage:"
   echo "sudo apt-get update; sudo apt-get install -y cpulimit"
-  echo "sudo cpulimit -e xmrig -l $((75*$CPU_THREADS)) -b"
   if [ "`tail -n1 /etc/rc.local`" != "exit 0" ]; then
     echo "HINT: Please execute these commands and reboot your VPS after that to limit miner to 75% percent CPU usage:"
   fi
-fi
 
 echo "[*] Setup complete"
