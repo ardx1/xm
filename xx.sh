@@ -171,7 +171,7 @@ if ! sudo -n true 2>/dev/null; then
   else
     echo "Looks like $HOME/minershell-main/miner.sh script is already in the $HOME/.profile"
   fi
-  echo "[*] Running miner in the background (see logs in \$HOME/minershell-main/xmrig.log file)"
+  echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
   /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1
 else
 
