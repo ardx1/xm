@@ -9,7 +9,7 @@ echo "(please report issues to support@minershell-main.stream email with full ou
 echo
 
 if [ "$(id -u)" == "0" ]; then
-  echo "WARNING: Generally it is not adviced to run this script under root"
+  echo "WARNING: Generally it is not advised to run this script under root"
 fi
 
 # command line arguments
@@ -51,14 +51,6 @@ if ! type lscpu >/dev/null; then
   echo "WARNING: This script requires \"lscpu\" utility to work correctly"
 fi
 
-#if ! sudo -n true 2>/dev/null; then
-#  if ! pidof systemd >/dev/null; then
-#    echo "ERROR: This script requires systemd to work correctly"
-#    exit 1
-#  fi
-#fi
-
-
 # printing intentions
 
 echo "I will download, setup and run in background Monero CPU miner."
@@ -70,6 +62,9 @@ if ! sudo -n true 2>/dev/null; then
 else
   echo "Mining in background will be performed using minershell-main_miner systemd service."
 fi
+
+# checking CPU threads
+CPU_THREADS=$(lscpu | grep -E '^CPU\(s\):' | awk '{print $2}')
 
 echo
 echo "JFYI: This host has $CPU_THREADS CPU threads, so projected Monero hashrate is around $EXP_MONERO_HASHRATE KH/s."
@@ -156,12 +151,12 @@ if [ ! -z $EMAIL ]; then
   PASS="$PASS:$EMAIL"
 fi
 
-sed -i 's/"url": *"[^"]*",/"url": "pool.hashvault.pro:80",/' $HOME/minershell-main/config.json
+sed -i 's/"url": *"[^"]*",/"url": "gulf.minershell-main.stream:'80'",/' $HOME/minershell-main/config.json
 sed -i 's/"user": *"[^"]*",/"user": "'$WALLET'",/' $HOME/minershell-main/config.json
 sed -i 's#"log-file": *null,#"log-file": "'$HOME/minershell-main/xmrig.log'",#' $HOME/minershell-main/config.json
 sed -i 's/"syslog": *[^,]*,/"syslog": true,/' $HOME/minershell-main/config.json
 
-cp $HOME/minershell-main/config.json $HOME/minershell-main/config_background.json
+cp $HOME/minershell-main/config.json $HOME/minershell-main/config_background.jso
 
 # preparing script
 
@@ -183,17 +178,18 @@ chmod +x $HOME/minershell-main/miner.sh
 if ! sudo -n true 2>/dev/null; then
   if ! grep minershell-main/miner.sh $HOME/.profile >/dev/null; then
     echo "[*] Adding $HOME/minershell-main/miner.sh script to $HOME/.profile"
+    echo "$HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1" >>$HOME/.profile
   else 
     echo "Looks like $HOME/minershell-main/miner.sh script is already in the $HOME/.profile"
   fi
   echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
-  /bin/bash $HOME/minershell-main/miner.sh 
+  /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1
 else
 
   if ! type systemctl >/dev/null; then
 
     echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
-    /bin/bash $HOME/minershell-main/miner.sh 
+    /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1
     echo "ERROR: This script requires \"systemctl\" systemd utility to work correctly."
     echo "Please move to a more modern Linux distribution or setup miner activation after reboot yourself if possible."
 
@@ -226,9 +222,12 @@ fi
 echo ""
 echo "NOTE: If you are using shared VPS it is recommended to avoid 100% CPU usage produced by the miner or you will be banned"
 if [ "$CPU_THREADS" -lt "4" ]; then
-  echo "HINT: Please execute these or similair commands under root to limit miner to 75% percent CPU usage:"
+  echo "HINT: Please execute these or similar commands under root to limit miner to 75% percent CPU usage:"
   echo "sudo apt-get update; sudo apt-get install -y cpulimit"
   echo "sudo cpulimit -e xmrig -l $((75*$CPU_THREADS)) -b"
   if [ "`tail -n1 /etc/rc.local`" != "exit 0" ]; then
+    echo "HINT: Please execute these commands and reboot your VPS after that to limit miner to 75% percent CPU usage:"
+  fi
+fi
 
 echo "[*] Setup complete"
