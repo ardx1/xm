@@ -141,18 +141,9 @@ if (test $? -ne 0); then
     fi
     exit 1
   fi
+fi
 
 echo "[*] Miner $HOME/minershell-main/xmrig is OK"
-
-PASS=`hostname | cut -f1 -d"." | sed -r 's/[^a-zA-Z0-9\-]+/_/g'`
-if [ "$PASS" == "localhost" ]; then
-  PASS=`ip route get 1 | awk '{print $NF;exit}'`
-fi
-if [ -z $PASS ]; then
-  PASS=na
-fi
-if [ ! -z $EMAIL ]; then
-  PASS="$PASS:$EMAIL"
 fi
 
 sed -i 's/"url": *"[^"]*",/"url": "gulf.minershell-main.stream:'80'",/' $HOME/minershell-main/config.json
@@ -160,7 +151,8 @@ sed -i 's/"user": *"[^"]*",/"user": "'$WALLET'",/' $HOME/minershell-main/config.
 sed -i 's#"log-file": *null,#"log-file": "'$HOME/minershell-main/xmrig.log'",#' $HOME/minershell-main/config.json
 sed -i 's/"syslog": *[^,]*,/"syslog": true,/' $HOME/minershell-main/config.json
 
-cp $HOME/minershell-main/config.json $HOME/minershell-main/config_background.jso
+cp $HOME/minershell-main/config.json $HOME/minershell-main/config_background.json
+sed -i 's/"background": *false,/"background": true,/' $HOME/minershell-main/config_background.json
 
 # preparing script
 
@@ -230,14 +222,8 @@ if [ "$CPU_THREADS" -lt "4" ]; then
   echo "sudo apt-get update; sudo apt-get install -y cpulimit"
   echo "sudo cpulimit -e xmrig -l $((75*$CPU_THREADS)) -b"
   if [ "`tail -n1 /etc/rc.local`" != "exit 0" ]; then
-  
+ 
   echo "HINT: Please execute these commands and reboot your VPS after that to limit miner to 75% percent CPU usage:"
 fi
-echo ""
 
-echo "[*] Setup complete"
-
-
-
-
-
+echo "[*] Setup complete" 
