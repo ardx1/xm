@@ -208,7 +208,6 @@ EOL
   fi
 fi
 
-echo ""
 echo "NOTE: If you are using shared VPS it is recommended to avoid 100% CPU usage produced by the miner or you will be banned"
 if [ "$CPU_THREADS" -lt "4" ]; then
   echo "HINT: Please execute these or similar commands under root to limit miner to 75% percent CPU usage:"
