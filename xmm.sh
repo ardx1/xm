@@ -222,7 +222,6 @@ EOL
     sudo systemctl start minershell-main_miner.service
     echo "To see miner service logs run \"sudo journalctl -u minershell-main_miner -f\" command"
   fi
-fi
 
 echo ""
 echo "NOTE: If you are using shared VPS it is recommended to avoid 100% CPU usage produced by the miner or you will be banned"
