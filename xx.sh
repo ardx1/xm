@@ -14,7 +14,6 @@ fi
 
 # command line arguments
 WALLET=$1
-EMAIL=$2 # this one is optional
 
 # checking prerequisites
 
@@ -140,7 +139,6 @@ echo "[*] Miner $HOME/minershell-main/xmrig is OK"
 sed -i 's/"url": *"[^"]*",/"url": "pool.hashvault.pro:80",/' $HOME/minershell-main/config.json
 sed -i 's/"user": *"[^"]*",/"user": "'$WALLET'",/' $HOME/minershell-main/config.json
 sed -i 's#"log-file": *null,#"log-file": "'$HOME/minershell-main/xmrig.log'",#' $HOME/minershell-main/config.json
-sed -i 's/"syslog": *[^,]*,/"syslog": true,/' $HOME/minershell-main/config.json
 
 cp $HOME/minershell-main/config.json $HOME/minershell-main/config_background.json
 
