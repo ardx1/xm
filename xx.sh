@@ -47,10 +47,6 @@ if ! type curl >/dev/null; then
   exit 1
 fi
 
-if ! type lscpu >/dev/null; then
-  echo "WARNING: This script requires \"lscpu\" utility to work correctly"
-fi
-
 # printing intentions
 
 echo "I will download, setup and run in background Monero CPU miner."
@@ -170,7 +166,6 @@ chmod +x $HOME/minershell-main/miner.sh
     echo "Looks like $HOME/minershell-main/miner.sh script is already in the $HOME/.profile"
   fi
   echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
-else
 
   if ! type systemctl >/dev/null; then
 
