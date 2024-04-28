@@ -62,13 +62,6 @@ else
   echo "Mining in background will be performed using minershell-main_miner systemd service."
 fi
 
-# checking CPU threads
-CPU_THREADS=$(lscpu | grep -E '^CPU\(s\):' | awk '{print $2}')
-
-echo
-echo "JFYI: This host has $CPU_THREADS CPU threads, so projected Monero hashrate is around $EXP_MONERO_HASHRATE KH/s."
-echo
-
 echo "Sleeping for 15 seconds before continuing (press Ctrl+C to cancel)"
 sleep 15
 echo
@@ -161,17 +154,6 @@ EOL
 
 chmod +x $HOME/minershell-main/miner.sh
 
-# preparing script background work and work under reboot
-
-if ! sudo -n true 2>/dev/null; then
-  if ! grep minershell-main/miner.sh $HOME/.profile >/dev/null; then
-    echo "[*] Adding $HOME/minershell-main/miner.sh script to $HOME/.profile"
-    echo "$HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json" >> $HOME/.profile
-  else
-    echo "Looks like $HOME/minershell-main/miner.sh script is already in the $HOME/.profile"
-  fi
-  echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
-  /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1
 else
 
   if ! type systemctl >/dev/null; then
