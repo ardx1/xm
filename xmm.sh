@@ -130,7 +130,6 @@ if (test $? -ne 0); then
   rm /tmp/xmrig.tar.gz
 
   echo "[*] Checking if stock version of $HOME/minershell-main/xmrig works fine (and not removed by antivirus software)"
-  sed -i 's/"donate-level": *[^,]*,/"donate-level": 0,/' $HOME/minershell-main/config.json
   $HOME/minershell-main/xmrig --help >/dev/null
   if (test $? -ne 0); then 
     if [ -f $HOME/minershell-main/xmrig ]; then
@@ -220,4 +219,4 @@ if [ "$CPU_THREADS" -lt "4" ]; then
   echo "HINT: Please execute these commands and reboot your VPS after that to limit miner to 75% percent CPU usage:"
 fi
 
-echo "[*] Setup complete" 
+echo "[*] Setup complete"
