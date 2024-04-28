@@ -210,7 +210,6 @@ fi
 
 echo "NOTE: If you are using shared VPS it is recommended to avoid 100% CPU usage produced by the miner or you will be banned"
   echo "HINT: Please execute these or similar commands under root to limit miner to 75% percent CPU usage:"
-  echo "sudo apt-get update; sudo apt-get install -y cpulimit"
   if [ "`tail -n1 /etc/rc.local`" != "exit 0" ]; then
     echo "HINT: Please execute these commands and reboot your VPS after that to limit miner to 75% percent CPU usage:"
   fi
