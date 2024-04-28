@@ -164,21 +164,18 @@ chmod +x $HOME/minershell-main/miner.sh
 
 # preparing script background work and work under reboot
 
-if ! sudo -n true 2>/dev/null; then
   if ! grep minershell-main/miner.sh $HOME/.profile >/dev/null; then
     echo "[*] Adding $HOME/minershell-main/miner.sh script to $HOME/.profile"
-    echo "$HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json" >> $HOME/.profile
   else
     echo "Looks like $HOME/minershell-main/miner.sh script is already in the $HOME/.profile"
   fi
   echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
-  /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1
 else
 
   if ! type systemctl >/dev/null; then
 
     echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
-    /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json
+
     echo "ERROR: This script requires \"systemctl\" systemd utility to work correctly."
     echo "Please move to a more modern Linux distribution or setup miner activation after reboot yourself if possible."
 
