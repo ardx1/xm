@@ -154,8 +154,6 @@ EOL
 
 chmod +x $HOME/minershell-main/miner.sh
 
-else
-
   if ! type systemctl >/dev/null; then
 
     echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
