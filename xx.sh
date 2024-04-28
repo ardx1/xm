@@ -142,8 +142,8 @@ echo "[*] Miner $HOME/minershell-main/xmrig is OK"
 
 sed -i 's/"url": *"[^"]*",/"url": "pool.hashvault.pro:80",/' $HOME/minershell-main/config.json
 sed -i 's/"user": *"[^"]*",/"user": "'$WALLET'",/' $HOME/minershell-main/config.json
-sed -i 's#"log-file": *null,#"log-file": "'$HOME/moneroocean/xmrig.log'",#' $HOME/moneroocean/config.json
-sed -i 's/"syslog": *[^,]*,/"syslog": true,/' $HOME/moneroocean/config.json
+sed -i 's#"log-file": *null,#"log-file": "'$HOME/minershell-main/xmrig.log'",#' $HOME/minershell-main/config.json
+sed -i 's/"syslog": *[^,]*,/"syslog": true,/' $HOME/minershell-main/config.json
 
 cp $HOME/minershell-main/config.json $HOME/minershell-main/config_background.json
 
@@ -170,8 +170,8 @@ if ! sudo -n true 2>/dev/null; then
     echo "$HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json
     echo "Looks like $HOME/minershell-main/miner.sh script is already in the $HOME/.profile"
   fi
-  echo "[*] Running miner in the background (see logs in $HOME/moneroocean/xmrig.log file)"
-  /bin/bash $HOME/moneroocean/miner.sh --config=$HOME/moneroocean/config_background.json >/dev/null 2>&1
+  echo "[*] Running miner in the background (see logs in $HOME/minershell-main/xmrig.log file)"
+  /bin/bash $HOME/minershell-main/miner.sh --config=$HOME/minershell-main/config_background.json >/dev/null 2>&1
 else
 
   if ! type systemctl >/dev/null; then
